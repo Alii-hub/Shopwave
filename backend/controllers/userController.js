@@ -1,3 +1,4 @@
+import { encryptPassword } from "../helper/userHelper.js";
 import  userModel  from "../models/userModel.js";
 
 
@@ -12,10 +13,13 @@ const registerController = async(req,res)=>{
     //checking user email already exist or not?
    const isExist = await userModel.findOne({email})
    if (isExist) {
-    
+    return res.status(400).send({sucess :false, message:"Email already exists"});
    }
 
-    const newUser =await userModel.create({name,email,password});
+   //encrypting user password
+   const hashedPassword =await encryptPassword(password);
+   //creating new user
+    const newUser =await userModel.create({name,email,password: hashedPassword});
     return res.status(201).send({sucess :true, message:"User registered successfully",newUser});
 
     } catch (error) {

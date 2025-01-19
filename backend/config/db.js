@@ -15,9 +15,4 @@ const connectDB = async ()=>{
     }
 }
 
-export default connectDB;
-
-
-// kdjfalsdjk 
-// kjdfalkdjf
-// kdfjaldjkfklasjd;fkla fljadskfj afak 
+export default connectDB; 
