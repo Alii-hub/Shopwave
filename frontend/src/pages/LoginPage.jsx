@@ -14,7 +14,7 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-export default function RegisterPage({ className, ...props }) {
+export default function LoginPage({ className, ...props }) {
 
   const [inputValues ,setinputValues] = useState([])
 
@@ -28,7 +28,7 @@ export default function RegisterPage({ className, ...props }) {
   const handleSubmit = (e)=>{
     e.preventDefault();
     // setinputValues(inputValues);
-    // console.log(inputValues);
+    console.log(inputValues);
     axios.post("http://localhost:8080/api/v1/users/register",inputValues,{
     headers: {'Content-Type': 'application/json'}})
     .then((response)=>{
@@ -50,7 +50,7 @@ export default function RegisterPage({ className, ...props }) {
       <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Sin Up</CardTitle>
+          <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
             Enter your email below to login to your account
           </CardDescription>
@@ -59,19 +59,7 @@ export default function RegisterPage({ className, ...props }) {
           <form onSubmit={handleSubmit}>
             
             <div className="flex flex-col gap-6">
-            <div className="grid gap-2">
-                <Label htmlFor="Full-name">Full Name</Label>
-                <Input
-                  id="Full-name"
-                  type="text"
-                  placeholder="Jhon Doe"
-                  required
-                  name="name"
-                  value={inputValues.name || ""} 
-        onChange={handleChange}
-                />
-              </div>
-
+           
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -98,12 +86,12 @@ export default function RegisterPage({ className, ...props }) {
         onChange={handleChange}/>
               </div>
               <Button type="submit" className="w-full">
-                Create an account
+                Sign in
               </Button>
               <div className="mb-4 text-center text-sm">
               Already have an account?{" "}
-                <Link to="/login" className="underline underline-offset-4"> 
-                Sign in</Link>
+                <Link to="/register" className="underline underline-offset-4"> 
+                Sign up</Link>
             </div>
               
             </div>
