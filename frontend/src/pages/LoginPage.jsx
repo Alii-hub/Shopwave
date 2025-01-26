@@ -11,36 +11,32 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { login } from "../store/features/auth/authSlice.js";
 
 export default function LoginPage({ className, ...props }) {
   const [inputValues, setinputValues] = useState([]);
-
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
     setinputValues((values) => ({ ...values, [name]: value }));
   };
-
+ 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // setinputValues(inputValues);
-    console.log(inputValues);
-    axios
-      .post("http://localhost:8080/api/v1/users/login", inputValues, {
-        withCredentials: true, // axios send automatically cookies when we apply this property
-        headers: { "Content-Type": "application/json" },
-      })
+    dispatch(login(inputValues))
+      .unwrap()
       .then((response) => {
-        //console.log(response);
-        toast.success(response?.data?.message, { autoClose: 2000 });
-        setinputValues({});
+        if (response?.sucess == true) {
+          toast.success(response?.message, { autoClose: 2000 });
+        } else {
+          toast.error(response?.message, { autoClose: 2000 });
+        }
       })
       .catch((error) => {
-        //console.log(error)
-        toast.error(error.response?.data?.message, { autoClose: 2000 });
-        setinputValues({});
+        console.log(error);
       });
   };
 
