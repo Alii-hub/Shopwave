@@ -14,7 +14,7 @@ export const login = createAsyncThunk("auth/login",async(inputValues,thunkAPI)=>
         return thunkAPI.rejectWithValue(error)
     }
 })
-
+ 
 const getUserDataFromLocalStorage = window.localStorage.getItem("user") ? JSON.parse(window.localStorage.getItem("user")) : null;
 
 const initialState = {

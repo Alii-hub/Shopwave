@@ -68,7 +68,7 @@ const loginController = async (req, res) => {
 
     //Remove password field to send user data from backend to frontend
     user.password = undefined;
-  
+   
     //generate token
     const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXP,
