@@ -1,4 +1,4 @@
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Navigate, Outlet, useNavigate } from "react-router-dom";
 import {
   Bell,
   CircleUser,
@@ -33,57 +33,62 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import axios from "axios";
 // import { logout } from "@/store/features/auth/authSlice";
 
 
 
 export default function DashboardLayout() {
-  const nevigate = useNavigate();
-  const dispatch = useDispatch();
+  const [message , setMessage] = useState(null)
   const navigate = useNavigate();
-//   const user = useSelector((state)=> state.authReducer.user?.user)
-//   const [ message , setMessage ] = useState(null);
-//   useEffect(()=>{
-//     if(!user){
-//       setMessage("You are not logged in. Redirecting to Login Page")
-//       setTimeout(()=>{
-//         navigate("/login")
-//       } , 3000)
-//     }else if(user.role !== 1){
-//       console.log(user.role);
-//       setMessage("You are unauthorized. Redirecting to Home page")
-//       setTimeout(()=>{
-//         navigate("/")
-//       } , 3000)
-//     }
-//   } , [user , navigate])
 
-//   const handleLogout = ()=>{
-//     dispatch(logout())
-//       .unwrap()
-//       .then((respons) => {
-//         if(respons?.success == true){
-//           console.log(Response)
-//           toast.success(respons?.message, {autoClose: 2000})
-//           setTimeout(() => {
-//             nevigate("/")
-//           }, 2000);
-//         }else{
-//           toast.error(respons?.message , {autoClose: 2000})
-//         }
-//       })
-//       .catch((error) => {
-//         toast.error(error , {autoClose: 2000})
-//       });
-//   }
 
-//   if(message){
-//     return(
-//       <div className="h-screen flex justify-center items-center">
-//       <p>{message}</p>
-//     </div>
-//     ) 
-//   }
+  const user = useSelector((state)=>(state.auth.user?.user
+  ))
+  useEffect(()=>{
+    if(!user){
+      setMessage("You are not logged in.Redirecting you to login page")
+      setTimeout(()=>{
+        navigate("/login")
+      },3000)
+    }else if(user.role !== 1) {
+      setMessage("You are not authorized to access this resource.Redirecting you to Homepage")
+      setTimeout(()=>{
+        navigate("/")
+      },3000)
+    }
+  },[user, navigate ]);
+
+const handleLogout = ()=>{
+  
+  axios
+  .get("http://localhost:8080/api/v1/users/logout", {
+    withCredentials: true, // axios send automatically cookies when we apply this property
+    headers: { "Content-Type": "application/json" },
+  })
+  .then((response) => {
+    window.localStorage.removeItem("user");  //to remove data from localStorage
+    toast.success(response?.data?.message, { autoClose: 2000 });
+    setTimeout(() => {
+      navigate("/login");
+    }, 2000);
+  })
+  .catch((error) => {
+    window.localStorage.removeItem("user");  //to remove data from localStorage
+    toast.success(error?.response?.data?.message);
+  });
+
+}
+
+if (message){
+  return (
+    <div className="h-screen flex justify-center items-center">
+      <div className="text-center">
+        <p className="text-3xl">{message}</p>
+      </div>
+    </div>
+  )
+}
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -236,7 +241,7 @@ export default function DashboardLayout() {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <button className="px-3 py-2" >Logout</button>
+              <button className="px-3 py-2" onClick={handleLogout} >Logout</button>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +18,8 @@ export default function RegisterPage({ className, ...props }) {
 
   const [inputValues ,setinputValues] = useState([])
 
+  const navigate = useNavigate();
+
   const handleChange = (e)=>{
     const name = e.target.name;
     const value = e.target.value;
@@ -35,6 +37,9 @@ export default function RegisterPage({ className, ...props }) {
       //console.log(response);
       toast.success(response?.data?.message,{autoClose:2000});
       setinputValues({})
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     })
     .catch((error)=>{
       //console.log(error)

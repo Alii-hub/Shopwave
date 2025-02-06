@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +18,7 @@ import { login } from "../store/features/auth/authSlice.js";
 export default function LoginPage({ className, ...props }) {
   const [inputValues, setinputValues] = useState([]);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -31,13 +32,15 @@ export default function LoginPage({ className, ...props }) {
       .then((response) => {
         if (response?.sucess == true) {
           toast.success(response?.message, { autoClose: 2000 });
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
         } else {
           toast.error(response?.message, { autoClose: 2000 });
         }
       })
       .catch((error) => {
-        console.log(error);
-      });
+        toast.error(error, { autoClose: 2000 });      });
   };
 
   return (
