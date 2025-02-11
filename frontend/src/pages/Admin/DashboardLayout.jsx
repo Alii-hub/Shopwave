@@ -33,14 +33,15 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import axios from "axios";
-// import { logout } from "@/store/features/auth/authSlice";
+import { logout } from "@/store/features/auth/authSlice";
+
 
 
 
 export default function DashboardLayout() {
   const [message , setMessage] = useState(null)
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
 
   const user = useSelector((state)=>(state.auth.user?.user
@@ -60,24 +61,20 @@ export default function DashboardLayout() {
   },[user, navigate ]);
 
 const handleLogout = ()=>{
-  
-  axios
-  .get("http://localhost:8080/api/v1/users/logout", {
-    withCredentials: true, // axios send automatically cookies when we apply this property
-    headers: { "Content-Type": "application/json" },
-  })
-  .then((response) => {
-    window.localStorage.removeItem("user");  //to remove data from localStorage
-    toast.success(response?.data?.message, { autoClose: 2000 });
-    setTimeout(() => {
-      navigate("/login");
-    }, 2000);
-  })
-  .catch((error) => {
-    window.localStorage.removeItem("user");  //to remove data from localStorage
-    toast.success(error?.response?.data?.message);
-  });
-
+ dispatch(logout())
+       .unwrap()
+       .then((response) => {
+         if (response?.sucess == true) {
+           toast.success(response?.message, { autoClose: 2000 });
+           setTimeout(() => {
+             navigate("/");
+           }, 2000);
+         } else {
+           toast.error(response?.message, { autoClose: 2000 });
+         }
+       })
+       .catch((error) => {
+         toast.error(error, { autoClose: 2000 });      });
 }
 
 if (message){

@@ -11,14 +11,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
+import { register } from "@/store/features/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function RegisterPage({ className, ...props }) {
 
   const [inputValues ,setinputValues] = useState([])
-
+  const status = useSelector((state)=>state.auth.status)
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e)=>{
     const name = e.target.name;
@@ -31,21 +33,20 @@ export default function RegisterPage({ className, ...props }) {
     e.preventDefault();
     // setinputValues(inputValues);
     // console.log(inputValues);
-    axios.post("http://localhost:8080/api/v1/users/register",inputValues,{
-    headers: {'Content-Type': 'application/json'}})
-    .then((response)=>{
-      //console.log(response);
-      toast.success(response?.data?.message,{autoClose:2000});
-      setinputValues({})
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
-    })
-    .catch((error)=>{
-      //console.log(error)
-      toast.error(error.response?.data?.message,{autoClose:2000});
-      setinputValues({})
-    });
+    dispatch(register(inputValues))
+          .unwrap()
+          .then((response) => {
+            if (response?.sucess == true) {
+              toast.success(response?.message, { autoClose: 2000 });
+              setTimeout(() => {
+                navigate("/");
+              }, 2000);
+            } else {
+              toast.error(response?.message, { autoClose: 2000 });
+            }
+          })
+          .catch((error) => {
+            toast.error(error, { autoClose: 2000 });      });
     
   }
 
@@ -102,8 +103,8 @@ export default function RegisterPage({ className, ...props }) {
                 <Input id="password" type="password" required name="password" value={inputValues.password || ""} 
         onChange={handleChange}/>
               </div>
-              <Button type="submit" className="w-full">
-                Create an account
+              <Button type="submit" className="w-full" disabled={status == "loading"? true : false}>
+              {status == "loading" ? "Creating account...." : "Create an account"}
               </Button>
               <div className="mb-4 text-center text-sm">
               Already have an account?{" "}

@@ -12,11 +12,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../store/features/auth/authSlice.js";
 
 export default function LoginPage({ className, ...props }) {
   const [inputValues, setinputValues] = useState([]);
+  const status = useSelector((state)=>state.auth.status)
+ 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleChange = (e) => {
@@ -87,8 +89,8 @@ export default function LoginPage({ className, ...props }) {
                     onChange={handleChange}
                   />
                 </div>
-                <Button type="submit" className="w-full">
-                  Sign in
+                <Button type="submit" className="w-full" disabled={status == "loading"? true : false}>
+                {status == "loading" ? "signing in...." : "Sign in"}
                 </Button>
                 <div className="mb-4 text-center text-sm">
                   Already have an account?{" "}

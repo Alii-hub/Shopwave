@@ -1,4 +1,4 @@
-import { BrowserRouter,Routes,Route } from "react-router-dom"
+import { Routes,Route, useLocation } from "react-router-dom"
 import RegisterPage from "./pages/RegisterPage";
 import { ToastContainer } from 'react-toastify';
 import LoginPage from "./pages/LoginPage";
@@ -8,6 +8,12 @@ import Dashboard from "./pages/Admin/Dashboard";
 import Orders from "./pages/Admin/Orders";
 import Products from "./pages/Admin/Products";
 import Users from "./pages/Admin/Users";
+
+import NavBar from "./components/Navbar";
+import About from "./pages/About";
+import Shop from "./pages/Shop";
+import Contact from "./pages/Contact";
+import Profile from "./pages/Profile";
 import Categories from "./pages/Admin/Categories";
 
 
@@ -15,17 +21,27 @@ import Categories from "./pages/Admin/Categories";
 
 
 function App() {
-  
+ const location = useLocation()
+ const isAdmin = location.pathname.startsWith("/admin")
 
   return (
     <>
-     <BrowserRouter>
+    
+     {!isAdmin && <NavBar />}
      
      <Routes>
      <Route path="/" element={<HomePage/>}/>
+     <Route path="/about" element={<About/>}/>
+     <Route path="/shop" element={<Shop/>}/>
+     <Route path="/contact" element={<Contact/>}/>
+     <Route path="/profile" element={<Profile/>}/>
+
+     <Route path="/register" element={<RegisterPage/>}/>
+      <Route path="/Login" element={<LoginPage/>}/>
+
 
      
-   {/* dashboard path */}
+   {/* dashboard path admin routes*/}
 
      <Route path="/admin" element={<DashboardLayout/>}>
      <Route index element={<Dashboard/>}/>
@@ -36,11 +52,10 @@ function App() {
      </Route>
      {/* ------------------------ */}
      
-      <Route path="/register" element={<RegisterPage/>}/>
-      <Route path="/Login" element={<LoginPage/>}/>
+      
      </Routes>
      <ToastContainer/>
-     </BrowserRouter>
+     
     </>
   );
 }
