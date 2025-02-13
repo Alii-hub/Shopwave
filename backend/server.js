@@ -22,6 +22,7 @@ app.use(cookieParser());
 // importing routes
 
 import  userRoutes  from "./routes/userRoutes.js";
+import  categoriesRoutes  from "./routes/categoriesRoutes.js";
 
 // idr ham api bnana laga ha
 
@@ -29,6 +30,11 @@ import  userRoutes  from "./routes/userRoutes.js";
 // http://localhost:8080/api/v1/users
 
 app.use("/api/v1/users",userRoutes)
+
+// http://localhost:8080/api/v1/users
+
+app.use("/api/v1/categories",categoriesRoutes)
+
 const PORT =process.env.PORT || 3000;
 
 app.listen(PORT , ()=>{console.log(`Server is running at port ${PORT}`.bgMagenta);});
