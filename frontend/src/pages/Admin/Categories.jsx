@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import moment from 'moment'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -18,12 +19,14 @@ import {
 } from "@/components/ui/table";
 import {
   AddCategory,
+  deleteCategory,
   getAllCategories,
 } from "@/store/features/categories/categoriesSlice";
 import { MoreHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Categories() {
   const [inputValues, setinputValues] = useState([]);
@@ -33,7 +36,8 @@ function Categories() {
   const error = useSelector((state) => state.categories.error);
 
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -57,6 +61,22 @@ function Categories() {
         toast.error(error, { autoClose: 2000 });
       });
   };
+
+  const handleDelete = (slug) => {
+    dispatch(deleteCategory(slug))
+      .unwrap()
+      .then((response) => {
+        if (response?.sucess == true) {
+          toast.success(response?.message, { autoClose: 2000 });
+          dispatch(getAllCategories());
+        } else {
+          toast.error(response?.message, { autoClose: 2000 });
+        }
+      })
+      .catch((error) => {
+        toast.error(error, { autoClose: 2000 });
+      });
+  }
 
   useEffect(() => {
     dispatch(getAllCategories());
@@ -123,7 +143,7 @@ function Categories() {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell className="capitalize">{category.name}</TableCell>
                     <TableCell>{category.slug}</TableCell>
-                    <TableCell>{category.createdAt}</TableCell>
+                    <TableCell>{moment(category.createdAt).format("DD-MM-YYYY")}</TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -141,7 +161,7 @@ function Categories() {
                           <DropdownMenuItem>
                             <button
                               onClick={() => {
-                                Navigate(
+                                navigate(
                                   `/admin/categories/update/${category.slug}`
                                 );
                               }}

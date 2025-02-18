@@ -15,6 +15,8 @@ import Shop from "./pages/Shop";
 import Contact from "./pages/Contact";
 import Profile from "./pages/Profile";
 import Categories from "./pages/Admin/Categories";
+import UpdateCategory from "./pages/Admin/UpdateCategory";
+import AddProduct from "./pages/Admin/AddProduct";
 
 
 
@@ -47,7 +49,9 @@ function App() {
      <Route index element={<Dashboard/>}/>
      <Route path="orders" element={<Orders/>}/>
      <Route path="products" element={<Products/>}/>
+     <Route path="products/add" element={<AddProduct/>}/>
      <Route path="categories" element={<Categories/>}/>
+     <Route path="categories/update/:slug" element={<UpdateCategory/>}/>
      <Route path="users" element={<Users/>}/>
      </Route>
      {/* ------------------------ */}

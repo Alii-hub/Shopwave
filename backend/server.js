@@ -21,19 +21,21 @@ app.use(cookieParser());
 
 // importing routes
 
-import  userRoutes  from "./routes/userRoutes.js";
-import  categoriesRoutes  from "./routes/categoriesRoutes.js";
 
 // idr ham api bnana laga ha
 
 // http://localhost:8080/
 // http://localhost:8080/api/v1/users
-
+import  userRoutes  from "./routes/userRoutes.js";
 app.use("/api/v1/users",userRoutes)
 
-// http://localhost:8080/api/v1/users
-
+// http://localhost:8080/api/v1/categories
+import  categoriesRoutes  from "./routes/categoriesRoutes.js";
 app.use("/api/v1/categories",categoriesRoutes)
+
+// http://localhost:8080/api/v1/products
+import productsRoutes from './routes/productsRoutes.js'
+app.use("/api/v1/products",productsRoutes)
 
 const PORT =process.env.PORT || 3000;
 
